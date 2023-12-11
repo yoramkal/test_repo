@@ -1,0 +1,23 @@
+import pandas as pd
+import openai
+
+# Load your CSV file
+df = pd.read_csv(r'C:\Users\LT-YORAM\Documents\Python course\time and finance\extraction\FinancialPhraseBank-v1.0\FinancialPhraseBank-v1.0\stock_data_short.csv')
+
+# Set your OpenAI API key
+openai.api_key = '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'
+
+# Function to classify sentiment
+def classify_sentiment(text):
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=f"Classify the sentiment of the following financial message as positive, negative, or neutral:\n\n{text}",
+        max_tokens=60
+    )
+    return response.choices[0].text.strip()
+
+# Apply the function to each message in your DataFrame
+df['sentiment'] = df['Text'].apply(classify_sentiment)
+
+# Save the results back to a CSV file or process as needed
+df.to_csv(r'C:\Users\LT-YORAM\Documents\Python course\time and finance\extraction\FinancialPhraseBank-v1.0\FinancialPhraseBank-v1.0\output_file.csv', index=False)
